@@ -1,0 +1,77 @@
+====================================================
+1. Look at `mk-insertion-sort` in Section 2.9.2.
+
+ * a. Calling `(mk-insertion-sort >)` returns a function. What does the 
+   returned function do?
+
+   Ans : It sorts the list of elements in decreasing order.
+
+ * b. Given that the internal function `sort` (defined with `letrec` and 
+   `lambda`) takes only the list `xs` as argument, how does `sort` know what 
+   order to sort in?
+
+   Ans : Sort calls insert function and this contains the order to sort as it takes lt?
+         as the parameter to find out the order to sort.
+
+====================================================
+2. Read Section 2.12.3. What is the difference between `DefineOldGlobal` and 
+   `DefineNewGlobal`?
+
+   Ans : `DefineOldGlobal` - The environment is unchanged, only the store is updated
+   and {rho(x)->v} in that store
+   `DefineNewGlobal` - The environment is extended to accommodate x and bind to a fresh
+   location l. The expression then is evaluated in the new environment. We even extend the store
+   and result of the evaluation is stored in l
+
+====================================================
+3. Set aside an hour to study the conjunctive-normal-form solver in Section 
+   2.10.1. This will help you a lot in solving Exercise 21.
+
+ * (a) Look at code chunk 149a on page 149. In English, describe how 
+   `(one-solution f)` produces the answer `((x #t) (y #f))`. Describe 
+   each function call, what the input to the function is, how the input is 
+   processed, and what the output of the function call is.
+
+   Ans:
+   I pass the formula as the input to one-solution,
+   find-cnf-true-assignment expects disjunctions which is the parameter formula passed to one-solution,
+   cur is '(), fail is the (lambda () 'no-solution) and success is (lambda (cur resume) cur).
+   find-disjunction-true-assignment takes (x y z) as the input along with cur, fail and lambda continuation
+   for success. find-disjunction-true-assignment checks for literals as it is false in this case it goes to
+   find-literal-true-assignment which takes literal x , cur, fail lambda continuation, succeed and
+   with help of satisfies?, binds? and variable-of, satisfying-value, find-c x is #t.
+   Once x is true for Disjunction1 (x y z) this evaluates to #t no matter the values of y and z.
+   Similar process is followed for Disjunction2 ((not x) (not y) (not z)). Here x is #t so if y is #f
+   then Disjunction2 is evaluated to #t no matter the value of z. Now Disjunction3 (x y (not z))
+   as x is already true this disjunction evaluates to #t regardless of y, z. So the value of z doesn't matter
+   in this case. Hence the solution for the conjunction '((x y z) ((not x) (not y) (not z)) (x y (not z)))
+   is true as a result.
+
+
+ * (b) Look at code chunk 149c. As you did with 149a, describe how 
+   `(one-solution '((x) ((not x))))` produces the answer no-solution.
+
+   Ans:
+   It follows the same procedure as in 3.(a) and (x) is evaluated to #t.
+   As is already #t, (not x) evaluates to #f and conjunction of ((x) (not x)) can never be evaluated to #t
+   So it results in no-solution.
+
+====================================================
+4. Look at the first paragraph of Exercise 21.  Each bullet gives one possible 
+   rule for creating a formula. For each bullet, write one example formula 
+   (using the μScheme notation) that is created according to the rule for that 
+   bullet—four examples in total.
+
+   * `symbol`: a symbol stands for variable (SYM)
+      Example: 'a
+
+   * `not`: (list2 'not f), f belongs to F
+      Example: (list2 'not '(not a))
+
+   * `and`: (cons 'and fs), fs belongs to LIST(F)
+      Example: (cons 'and '(and a b))
+
+   * `or`: (cons 'or fs), fs belongs to LIST(F)
+      Example: (cons 'or '(or a b))
+
+

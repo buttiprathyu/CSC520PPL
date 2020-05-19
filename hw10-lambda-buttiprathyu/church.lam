@@ -1,0 +1,163 @@
+// Solutions to the Lambda Calculus assignment, HW10
+// Prathyusha Butti
+// It took 9 hours 
+// Submission : 29th April, 2020 
+
+//==============================================================
+
+// (not bool) - logical NOT implementation in lambda Calculus
+
+// implementation
+not = \n.n false true;
+
+//test cases
+check-equiv (not true) = false;
+check-equiv (not false) = true;
+
+//==============================================================
+
+// (even? n) - Takes as argument a church numeral, returns 
+// false or true (church encoding) depending whether the number is
+// even or odd
+
+//implementation
+even? = \n.n not true;
+
+//test cases
+check-equiv (even? 4) = true;
+check-equiv (even? 3) = false;
+
+//==============================================================
+
+// (swap pair) - Takes a argument a pair and returns the swapped
+// order of the pair as the result
+
+//implementation
+swap = \p.pair(snd p)(fst p);
+
+//test cases
+check-equiv (swap (pair 3 4)) = pair 4 3;
+
+//==============================================================
+
+// (inc pair) Takes as argument a pair, and returns a pair 
+//  with the second element of pair incremented by 1.
+
+//implementation
+inc = \p.pair (fst p)(succ(snd p));
+
+//test cases
+check-equiv (inc (pair 2 3)) = pair 2 4;
+
+//==============================================================
+
+// (snap pair) Takes as argument a pair, and returns a pair 
+//  with the incremented and swapped elements.
+
+//implementation
+snap = \p.inc (swap p); 
+
+//test cases
+check-equiv (snap (pair 2 3)) = pair 3 3;
+
+//==============================================================
+
+// (div2 numeral) - Takes as argument a church numeral of form 2n or 2n+1
+// , divides that by two and returns a numeral as a result of form n.
+
+//implementation
+div2 = \n.fst (n snap (pair 0 0));
+
+//test cases
+check-equiv (div2 0) = 0;
+check-equiv (div2 1) = 0;
+check-equiv (div2 (+ 2 3)) = 2;
+check-equiv (div2 (* 2 2)) = 2;
+
+//==============================================================
+
+// (10x n) Takes as argument a church numeral and returns the number
+// multiplied by 10 as the result
+
+//implementation
+10x = \n.\f.\x.n (\x.f(f(f(f(f(f(f(f(f(f)))))))))) x;
+
+//test cases
+check-equiv (10x 1) = \f.\x.f(f(f(f(f(f(f(f(f(f)))))))));
+
+//==============================================================
+ 
+// (flip-bit n) Takes as argument a church numeral and 
+// maps 0 to 1 and nonzero to 0
+
+//implementation
+flip-bit = \n.n (\_.0) 1;
+
+//test cases
+check-equiv (flip-bit 0) = 1;
+check-equiv (flip-bit 1) = 0;
+check-equiv (flip-bit 2) = 0;
+
+//==============================================================
+
+// (is-zero? n) - Takes as argument a church numeral and returns
+// true if the church numeral is zero else false
+
+//implementation 
+is-zero? = \n.n(\x.false)true;
+
+//test cases
+check-equiv (is-zero? 0) = true;
+check-equiv (is-zero? 2) = false;
+
+//==============================================================
+ 
+// (mod2 n) Takes as argument a church numeral and 
+// returns the remainder
+
+//implementation
+mod2 = \n.flip-bit (n flip-bit 1);
+
+//test cases
+check-equiv (mod2 0) = 0;
+check-equiv (mod2 (+ 2 3)) = 1;
+
+//==============================================================
+
+// (binary n) Takes as argument a church numeral and returns the binary
+// equivalent in terms of church numeral
+
+
+//implementation
+//used my definition of binary from impcore assignment as F
+F = \f.(\n.(is-zero? n) 0  (+ (mod2 n) (10x (f (div2 n)))));
+noreduce binary = (Y F);
+
+//test cases
+check-equiv (binary 0) = 0;
+check-equiv (binary 1) = 1;
+check-equiv (binary 4) = (10x (10x 1));
+
+//==============================================================
+
+// (nth n xs) - Takes as argument a church numeral n and a list xs, and 
+// returns the nth element of xs
+// assuming there are always n+1 elements in the list
+
+//implementation
+noreduce nth = \n.\xs.car(n cdr xs);
+
+//test cases
+check-equiv (nth 0 (cons Alpha (cons Bravo (cons Charlie nil)))) = Alpha;
+check-equiv (nth 2 (cons Alpha (cons Bravo (cons Charlie nil)))) = Charlie;
+
+
+
+
+
+
+
+
+
+
+

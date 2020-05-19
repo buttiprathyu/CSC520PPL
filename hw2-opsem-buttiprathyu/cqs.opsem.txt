@@ -1,0 +1,57 @@
+For questions 1–5, please read pages 27–36 (the book sections on environments
+and on operational semantics of expressions).
+
+ 1. ξ (or $\xi$) is an environment that maps names to:
+    Ans : f - only the values of global variables
+
+ 2. ϕ (or $\phi$) is an environment that maps names to:
+    Ans : c - both primitive and user-defined functions
+
+ 3. ρ (or $\rho$) is an environment that maps names to:
+    Ans : b - only the values of formal parameters.
+
+Choices for questions 1–3:
+
+  a. only user-defined functions.
+  b. only the values of formal parameters.
+  c. both primitive and user-defined functions.
+  d. the values of both global variables and formal parameters.
+  e. only primitive functions.
+  f. only the values of global variables.
+
+ 4. In operational semantics, what kind of a thing does e stand for?
+    Ans : c - an expression
+
+ 5. In operational semantics, what kind of a thing does v stand for?
+    Ans : d - a value
+
+Choices for questions 4 and 5:
+
+  a. a variable
+  b. an elaboration
+  c. an expression
+  d. a value
+  e. a function
+
+For questions 6 and 7, please read Section 1.1.6 (page 23) on the 
+difference between primitive functions and predefined functions, and 
+please study the rules for function application in Section 1.4.6, which starts 
+on page 34.
+
+ 6. Function <= is in the initial basis but is not a primitive function (it is 
+    a predefined function). When evaluating (<= 0 n), what rule of the 
+    operational semantics is used at the root of the derivation?
+    Ans : a, b - ApplyLessThanEqTrue and ApplyLessThanEqFalse
+
+ 7. Function < is primitive. When evaluating (< n 10), what rule of the 
+    operational semantics is used at the root of the derivation?
+    Ans : d, e - ApplyLessThanTrue and ApplyLessThanFalse
+
+Choices for questions 6 and 7:
+
+  a. ApplyLessThanEqTrue
+  b. ApplyLessThanEqFalse
+  c. ApplyUser
+  d. ApplyLessThanTrue
+  e. ApplyLessThanFalse
+  f. ApplyPrim

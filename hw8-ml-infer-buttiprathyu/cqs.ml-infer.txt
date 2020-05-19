@@ -1,0 +1,193 @@
+
+1. Read sections 7.3.2 and 7.4.1.
+   We have seen the symbols ρ, τ, and σ before, but not used exactly in this 
+   way.
+
+   Here is a list of semantic and type-related concepts you have seen written 
+   using single symbols:
+  * an expression
+  * a name
+  * a location
+  * a value
+  * a type
+  * a type scheme (new in this chapter)
+  * a mapping from names to locations
+  * a mapping from names to values
+  * a mapping from names to types
+  * a mapping from names to type schemes (new in this chapter)
+   
+   There are lots of concepts and only so many symbols to go around. Please 
+   identify, from the preceding list, what each symbol stands for in the theory 
+   of nano-ML:
+
+   * (a)  ρ - a mapping from names to values
+
+   * (b) τ - type
+
+   * (c) σ - type scheme
+
+   * (d) Γ -  type environment
+
+    And finally,
+
+   * (e) Say briefly what, in nano-ML, is the difference between τ and σ:
+          σ - Quantified type over a list of type variables so can't provide it as an argument.
+          τ - is a type var, type constructor, type level application so can provide it as an argument.
+
+
+2. Read the first two pages of Section 7.4.3, which explain "substitutions" and 
+   "instances."
+
+  * Yes or no: does the substitution `(α → sym) ∘ (β → bool) ∘ (γ → int)` 
+    replace type variable `α` with type `sym`?
+     
+    YES
+
+  * Yes or no: does the substitution `(α → sym) ∘ (β → bool) ∘ (γ → int)` 
+    replace type variable `β` with type `bool`?
+
+    YES
+
+  * Yes or no: does the substitution `(α → sym) ∘ (β → bool) ∘ (γ → int)` leave 
+    the type `γ list` unchanged?
+
+    NO (Doubtful - didn't understand the question actually)
+
+  * Which of the following are instances of the polymorphic type scheme 
+    `∀α . α list → int`? For each one, please indicate whether it is an instance 
+    of the type scheme (True) or whether it is not an instance of the type 
+    scheme (False).
+
+   * `int list`  True
+
+   * `int list list` True
+
+   * `int list list → int` True
+
+   * `int * int list → list` True
+
+3. Read the first page of Section 7.5.2, which shows the form of a constraint. 
+   Then skip to the first page of Section 7.5.3, which explains how to apply a 
+   substitution to a constraint.
+
+   We start with a substitution θ and a constraint C:
+```
+   θ = (α₁ ↦ int)
+
+   C = α₁ ~ α₂ /\ α₂ ~ α₃ list /\ α₄ ~ α₃ list list.
+```
+   Now define C′ = θ(C).
+
+   * (a) Write C′: int ~ α₂ /\ α₂ ~ α₃ list /\ α₄ ~ α₃ list list.
+
+   * (b) Does C′ have a solution? NO
+
+   Now define C″ as the result of applying substitution `(α₂ ↦ int)` to C.
+
+   * (c) Write C″: α₁ ~ int /\ int ~ α₃ list /\ α₄ ~ α₃ list list.
+
+   * Does C″ have a solution? NO
+
+
+4. Now read all of Section 7.5.3, which explains how to solve constraints.
+
+   To demonstrate your understanding, reason about solving these four 
+   constraints:
+```
+C₁ = α ~ int
+
+C₂ = α ~ bool
+
+C₃ = C₁ /\ C₂
+
+C₄ = α₁ ~ α₂ /\ α₂ list ~ α₁
+```
+  * (a) Write a substitution `θ₁` that solves constraint `C₁`:
+        θ₁{α |-> int}
+
+  * (b) Write a substitution `θ₂` that solves constraint `C₂`:
+        θ₂{α |-> bool}
+
+  * (c) Does the composition `θ₂ ∘ θ₁` solve constraint `C₃ = C₁ /\ C₂`? 
+    NO
+
+  * (d) Can constraint `C₃` be solved? 
+    NO
+
+  * (e) Can constraint `C₄` be solved?
+    NO
+
+
+5. Read the first two pages of Section 7.5.2. Pay special attention to the Apply 
+   rule. Also read the footnote at the bottom of page 26 of [Seven Lessons in 
+   Program Design](https://www.cs.tufts.edu/comp/105-2019s/design/lessons.pdf).
+
+   Now consider type inference for the following expression e:
+```
+(f 3 #t)
+```
+
+   For this question, assume the following:
+
+   * Expression `3` has type `int`, with a trivial constraint.
+   * Expression `#t` has type `bool`, with a trivial constraint.
+   * Trivial constraints can be ignored.
+   * Every type variable except `'a`, `'b`, and `'c` is "fresh."
+
+   Answer both questions for both (a) and (b):
+
+   * (a) Assume that `f` is bound in Γ to the type scheme `∀.'a × 'b → 'c`. (The 
+     `∀` is supposed to be empty.) In judgment C, Γ ⊢ e : τ, what does the type 
+     checker output for τ?
+
+     τ : int x bool -> α
+
+     And what does the type checker output for C?
+     C : 'a ~ int /\ 'b ~ bool /\ 'c ~ int x bool 
+
+   * Assume that `f` is bound in Γ to the type scheme `∀.'a`. In judgment 
+     C, Γ ⊢ e : τ, what does the type checker output for τ?
+
+     τ : int 
+
+     And what does the type checker output for C?
+     C : 'a ~ int /\ 'c ~ int
+
+
+6. Read the paragraphs that describe the nondeterministic typing rules for  
+   lambda and for "Milner’s Let", which you will find on page 462. Especially, 
+   read the small paragraph following the lambda rule on page 461.
+
+   Now look at the val definition of too-poly in code chunk 462a. The right-hand 
+   side of the val definition is a lambda expression with the name empty-list 
+   playing the role of x₁.
+
+   * (a) The rule for `lambda` says that we can pick any type `τ₁` for 
+     `empty-list`.  After we've chosen `τ₁`, what is the type scheme to which 
+     `empty-list` (playing `x₁`) is bound in the extended environment which is 
+     used to check e?
+     (Hint: 
+     this type scheme comes from the `lambda` rule, as per the discussion in the 
+     small paragraph, and it is different from the type scheme of the 
+     `empty-list` that appears in the top-level `val` binding.)
+
+     Answer - ∀. list int 
+
+   * (b) Given that the rule for `lambda` says that we can pick any type `τ₁` 
+     for `empty-list`, why can't we pick a `τ₁` that makes the `lambda` 
+     expression type-check? Put the word YES next to the best explanation:
+
+     * Parameter `empty-list` has to have type `(forall ('a) (list 'a))`, but 
+       `τ₁` is not a `forall` type.
+
+     * Parameter `empty-list` has type `τ₁` = `(list 'a)`, which is not the same 
+       as `(list bool)`.
+
+     * Parameter `empty-list` can have any type `τ₁` but no `τ₁` can be 
+       equivalent to both `(list int)` and `(list bool)`. (MY PICK / YES)
+
+     * Parameter `empty-list` has type `τ₁` = `(list bool)`, which is not the 
+       same as `(list int)`.
+
+     * Parameter `empty-list` has type `τ₁` = `(list int)`, which is not the 
+       same as `(list bool)`.

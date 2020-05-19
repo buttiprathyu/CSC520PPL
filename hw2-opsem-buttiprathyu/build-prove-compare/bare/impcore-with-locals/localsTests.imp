@@ -1,0 +1,43 @@
+(check-expect (sum 1 2) 1)
+(check-expect (sum 1 10) 45)
+
+;; Returns the cumulative sum of numbers between x(inclusive) and y(exclusive).
+;; Assumes x < y
+(define sum (x y)(locals z)
+	(begin
+		(while (< x y)
+			(begin
+				(set z (+ z x))
+				(set x (+ x 1))))
+		z))
+
+;; (fact n) returns n!
+
+(check-expect (fact 8) 40320)
+(check-expect (fact 5) 120)
+(check-expect (fact 0) 1)
+
+(define fact (n) (locals ans)
+	(begin
+		(set ans 1)
+		(while
+			(> n 1)
+			(begin
+				(set ans (* ans n))
+				(set n (- n 1))))
+		ans))
+
+;; (testVarScope) Check that local variables have the correct semantics.
+;; Local variables with same name as formals should hide formal parameter
+;; This means no matter what value we pass in, the return value should be 0 since
+;; local variables are initialized to 0
+
+(check-expect (testVarScope 5) 0)
+(check-expect (testVarScope -1) 0)
+(check-expect (testVarScope 99) 0)
+(check-error (testVarScope)) ;; Check that number of parameters match
+(define testVarScope (n) (locals x n)
+	(begin
+		(set x n) ;; Should set x to 0, vs setting it to whatever the value of param n is
+		x
+	))

@@ -1,0 +1,39 @@
+
+1.  What is the value of the following Impcore expression?
+
+        (if (> 3 5) 17 99) 
+
+	Ans  : 99
+
+2.  Which of the following best describes the syntactic structure of
+    Impcore?
+
+    (a)   An expression can contain a definition
+    (b)   A definition can contain an expression
+    (c)   Both of the above
+    (d)   None of the above
+
+	Ans : b
+
+3.  Does this Impcore test pass? Please answer "yes" or "no."
+
+        (check-expect (+ 1 2 3) 6)
+	
+	Ans : no
+
+    Assuming `x` is bound to a global variable, does this Impcore test
+    pass? Again, please answer "yes" or "no."
+
+        (check-expect (set x 1) 1)
+
+	Ans : yes
+
+4.  (a) What concrete syntax could you write in C for this expression?
+	Ans : x = ((3+4)*5)
+
+    (b) What concrete syntax could you write in Impcore for this expression?
+	Ans : (set x ( * (+ 3 4) 5))
+
+5. "Bad"
+   Ans : Takes as arguments two integers x, n and returns x multiplied by itself n times (i.e. x power n) as the result" 
+

@@ -1,0 +1,177 @@
+1. *Receivers, arguments, and messages*. Read the first seven pages of Chapter 
+   10, through Section 10.1.3. Now examine these expressions from Figures 10.4 
+   and 10.6:
+```
+(w div: 2)
+(shape drawOn: self)
+(shapes do: [block (shape) (drawOn: shape self)])
+```
+
+   In each expression, please identify the receiver, the argument, and the 
+   message:
+
+   In `(w div: 2)`,
+
+   * The receiver is … w
+
+   * The argument is … 2
+   
+   * The message is … div:
+
+   In `(shape drawOn: self)`,
+
+   * The receiver is … shape
+
+   * The argument is … self
+
+   * The message is … drawOn:
+
+   In `(shapes do: [block (shape) (drawOn: shape self)])`,
+
+   * The receiver is … shapes
+
+   * The argument is … [block (shape) (drawOn: shape self)]
+
+   * The message is … do:
+
+
+2. *Colons in method names*. Continuing with the analysis of the Picture and 
+   TikzCanvas code in Figures 4 and 5, in both the protocol and the 
+   implementation, method add: has one colon in the name, method startDrawing 
+   has no colons in the name, and the method drawEllipseAt:width:height: has 
+   three colons in the name.
+
+  * (a) What, if anything, does the number of colons have to do with receivers?
+
+    Your answer: … Nothing
+
+  * (b) What, if anything, does the number of colons have to do with arguments?
+
+    Your answer: … each message has a number of colons equal to the number of arguments
+
+   If you need to, review the presentation in Section 10.1.1 on "Objects and 
+   Messages," which shows messages sent to shapes.
+
+3. *Class protocols and instance protocols*. Every message is part of some 
+   protocol. As example messages, study the transcript in code chunks 698c and 
+   698d, which puts three shapes into a picture and then draws the picture.
+
+  * (a) Of the messages used in the transcript, which ones are part of the class 
+    protocol for Picture or TikzCanvas, and which are part of the instance 
+    protocol?
+    Class Protocol - empty, new
+    Instance Protocol - add , renderUsing
+
+  * (b) In general, what do you do with messages in a class protocol, and how 
+    does that differ from what you do with messages in an instance protocol?
+    Sending messages to the class results in a new object i.e. creators
+    Sending messages to the instance results in producing a result i.e producers
+
+4. *Dynamic dispatch, part I: a toy class*. For the mechanisms of message send 
+   and dynamic dispatch, read Section 10.3.4. Using the class definitions in 
+   that section, message `m1` is sent to an object of class `C`. What method 
+   definitions are dispatched to, in what order?
+
+   Please edit this answer to put in the correct methods and classes:
+
+  * Dispatch to method `m1` on class `B`
+
+  * Dispatch to method `m2` on class `C`
+
+5. *Dynamic dispatch, part II*: messages to `self` and `super`. Now study the 
+   class method `new` defined on class `List`, which appears on page 752. The 
+   definition sends message `new` to `super`. (Keep in mind: because `new` is a 
+   class method, both `super` and `self` stand for the class, not for any 
+   instance.)
+
+  * (a) When class method `new` is executed, what three messages are sent by the 
+    method body, in what order?
+    1. (super new)
+    2. (ListSentinal new)
+    3. sentinel:
+
+  * (b) What do each of the three message sends accomplish?
+    1. The message 'new' is sent to the 'Object' super class. This returns an instance of the class List.
+    2. The message 'new' is sent to the 'ListSentinel' class. This returns an instance of the class ListSentinel.
+    3. sentinel: message uses the result of (ListSentinal new) as an argument to (super new). As a 
+       result produces List instance variable to the argument of sentinel message. 
+
+  * (c) If we change `new`s definition so instead of `(new super)` it says 
+    `(new self)`, which of the following scenarios best describes how the 
+    changed program behaves?
+
+   * 5.c.1 The `new` message will be dispatched to class `List`. The same method 
+     will run again, and the computation will not terminate.
+
+   * 5.c.2 The `new` message will be dispatched to a different class, and the 
+     reply to the `new` message will leave the sentinel pointing to the wrong 
+     value.
+
+   * 5.c.3 Nothing will change; in this example, there's no difference between 
+     `(new super)` and `(new self)`.
+
+   Your answer: The best description is scenario number 5.c.1
+
+6. *Design of the numeric classes*. Read about coercion in Section 10.5.7 on 
+   page 755. Look at the last part of the instance protocol for Number on page 
+   738. Explain the roles of the methods `asInteger`, `asFraction`, `asFloat`, 
+   and `coerce:`. If you are unsure, look at the implementations of these 
+   methods on class `Integer` on page 757.
+
+   * The role of `asInteger` is to coerce either Fraction or Float class into Integer class. 
+
+   * The role of `asFraction` is to coerce either Integer or Float class into Fraction class.
+
+   * The role of `asFloat` is to coerce wither Integer or Fraction class into Float class.
+
+   * The role of `coerce:` is to take an argument of some numeric type that is of different type and 
+   returns in the intended numeric type. Example : Takes 45 an Integer to a receiver i.e. of class Fraction and 
+   returns 45/1. 
+
+
+7. *Abstract classes in principle*. In Section 10.10.1, ("Key words and 
+   phrases"), you will find a short definition of "abstract class." What is the 
+   purpose of an abstract class? Pick one of the responses below.
+
+  * (a) To hide the representation of instances so programmers can change 
+    internal details without affecting client code
+
+  * (b) To define methods that other classes inherit, so that subclasses get 
+    useful default methods
+
+  * (c) The same as the purpose of a regular class: to define an abstraction
+
+   Your answer: b
+
+8. *Abstract classes in practice*: magnitudes and numbers. A natural-number 
+   class would inherit from abstract class `Magnitude`, and a big-integer class 
+   would inherit from `Magnitude` and from `Number`, which is also an abstract 
+   class.
+
+   Study the implementation of class `Magnitude` on page 744. List all the 
+   methods that are "subclass responsibility":
+
+   Your answer: method =, method <
+
+   These are methods that would need to be implemented in both a Natural class 
+   and a large-integer classes.
+
+
+9. *Double Dispatch*. Read section 10.5.9. And read the section "laws for 
+  multiple dispatch" in the 7th lesson on program design ("Program Design with 
+  Objects").  [NOTE: The version of seven lessons has a swapped order of the 
+  receiver and the message name.]
+  
+  Rewrite the 10 "laws of dispatch" on page 38 with the receiver first and the 
+  message second.
+
+  1. (:+ n) * A = ((:+ n) timesPos: A)
+  2. (:- n) * A = ((:- n) timesNeg: A)
+  3. (:+ n) * (:+ m) = ((:+ n) timesPos: (:+ m))
+  4. (:+ n) * (:- m) = ((:+ n) timesPos: (:- m))
+  5. (:- n) * (:+ m) = ((:- n) timesNeg: (:+ m))
+  6. (:- n) * (:- m) = ((:- n) timesNeg: (:- m))
+  7. ((:+ n) timesPos: (:+ m)) = :+ (n * m)
+  8. ((:+ n) timesPos: (:- m)) = :- (n * m)
+  9. ((:- n) timesNeg: (:+ m)) = :- (n * m)
+  10.((:- n) timesNeg: (:- m)) = :+ (n * m)

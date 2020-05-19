@@ -1,0 +1,15 @@
+Solution for implementing local variables in impcore
+Me and Jordan have collaborated for this task.
+
+We have modified the following files: 
+all.h 
+	- to match the parameters for the modified eval function
+imptests.c 
+	- we modified the tests to suit the eval function
+eval.c 
+	- We added a new environment to represent local variables. We make sure the locals
+hide the formals by checking first if a variable is in the local environment.
+parse.c 
+	- Updated the usage table to include the optional locals parameters in the function definition
+localsTests.imp 
+	- We added some test cases that include functions that utilize local variables.

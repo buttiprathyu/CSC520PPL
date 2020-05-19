@@ -1,0 +1,131 @@
+1. Read Section 6.3.3, which describes how Typed Impcore is extended with 
+   arrays. Examine code chunk 388, which shows the cases that have to be added 
+   to the type checker.
+
+   For each case, name the type-system rule that applies. Each answer should be 
+   a rule name like Apply or GlobalAssign.
+
+   * The rule for case `| ty (AAT (a, i)) = ...` is: ARRAYAT
+
+   * The rule for case `| ty (APUT (a, i, e)) = ...` is: ARRAYPUT
+
+   * The rule for case `| ty (AMAKE (len, init)) = ...` is: MAKEARRAY
+
+   * The rule for case `| ty (ASIZE a) = ...` is: ARRAYSIZE
+
+   Now pick one of the rules and explain, in informal English, what the rule is 
+   supposed to do.
+
+   MAKEARRAY - builds a new array with length 'len' and initialized to value 'init'
+
+
+2. Read Section 6.6.3 on quantified types in Typed μScheme. In addition to the 
+   prose, read the transcripts in the first couple pages of that section: each 
+   value that has a quantified type is instantiated later in the transcript, 
+   giving you more examples to relate back to the prose.
+
+   * (a) Assume variable `syms` holds a list of symbols (it has type 
+     (`list sym`)). What expression do you write to compute its length? Pick 
+     exactly one of the options below.
+
+     * (1) `(length syms)`
+     * (2) `((o length sym) syms)`
+     * (3) `((@ length sym) syms)` - my pick / answer
+     * (4) `((length sym) syms)`
+
+   * (b) You are given a function `positive?` of type `(int -> bool)`. Using the 
+   predefined function `o`, which has type 
+   `(forall ('a 'b 'c) (('b -> 'c) ('a -> 'b) -> ('a -> 'c)))`, what code do you 
+   write to compose `positive?` with `not`?
+     (define bool positive? ([n:int]) (> n 0)) - From Pg 370 - 370b code snippet (Only for reference)
+     (define bool not ([b:bool]) (if b (= 1 0) (= 0 0))) - Pg 370 - 370d code snippet (Only for reference)
+
+     (o not positive? someNumber)
+     i.e (o not positive? -54)
+
+   * (c) In testing, we sometimes use a three-argument function `third` that 
+     ignores its first two arguments and returns its third argument. Such a 
+     function has type
+```
+(forall ('a 'b 'c) ('a 'b 'c -> 'c))
+```
+    (val third (type-lambda ['a 'b 'c]
+                     (lambda ([x: 'a] [y: 'b] [z: 'c])
+                     z)))
+                     
+   There is only one sensible function that has this type. Using a `val` 
+   definition, define function `third` in Typed μScheme. You will need to use 
+   both `type-lambda` and `lambda`.
+
+   You are ready for exercise TD.
+
+3. Read about type equivalence starting in Section 6.6.6.
+
+   You are given ML values `tau1` and `tau2`, which represent the respective 
+   Typed μScheme types `(forall ('a) 'a)` and `(forall ('b) 'b)`. Semantically, 
+   these types are equivalent. For each of the two ML expressions below, say 
+   whether the expression produces `true` or produces `false`. Write each answer 
+   immediately below the expression.
+
+   * (a) `tau1 = tau2` - will it call eqType in the background?
+          false
+
+   * (b) `eqType (tau1, tau2)`
+          true
+
+4. Read section 6.6.5 on typing rules for expressions in Typed μScheme. For each 
+   of the expressions below, say if it is well typed, and if so, what its type 
+   is. If the expression is not well typed, say what typing rule fails and why.
+```
+; (a)
+(if #t 1 #f)
+
+Type rule - IF fails
+e1 - bool
+e2 - integer
+e3 - bool
+So NOT well typed as IF expects condition to be boolean, e2 and e3 to be of the same type
+but here it is of different type
+
+; (b)
+(let ([x 1]
+      [y 2])
+   (+ x y))
+
+Type rule - LET passes
+LET computes that x and y are of type integer and then evaluates the body using those types.
+well typed
+
+; (c)
+(lambda ([x : int]) x)
+
+Type rule - LAMBDA passes
+well typed as LAMBDA uses types of the argument, so it evaluates the type of the argument to integer
+here and its added to the Gamma environment
+
+; (d)
+(lambda ([x : 'a]) x)
+
+Type rule - LAMBDA passes
+well typed as Lambda uses the type of argument, here it is free type variable so
+adds this to the environment gamma and determines the type of the function
+
+
+; (e)
+(type-lambda ['a] (lambda ([x : 'a]) x))
+
+Type rule - TYLAMBDA passes
+typing environment binds x to 'a which is a free type variable of gamma
+well typed
+```
+
+5. Read Lesson 5 ("Program design with typing rules") of [Seven Lessons in 
+   Program Design](https://www.cs.tufts.edu/comp/105-2019s/design/lessons.pdf). 
+   In particular, read the explanation of how the If rule is rewritten to add 
+   type-equality judgments τ ≡ τ3 and τ1 ≡ bool. Now look at the list of typing 
+   rules for expressions in Figure 6.9 on page 438 in "Programming Languages: 
+   Build, Prove, and Compare." Identify one other rule that needs to be 
+   rewritten in the same fashion as `If`, for the same reason.
+
+   The rule you found is named → SET
+

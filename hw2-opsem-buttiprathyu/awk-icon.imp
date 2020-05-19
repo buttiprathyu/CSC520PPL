@@ -1,0 +1,26 @@
+;; Name: Prathyusha Butti
+;; Date due: 31st January, 2020
+;; CSc 520 Homework 2: Impcore
+;; File: awk-icon.imp
+;; Purpose: Contains Impcore code solutions for Exercise 22
+
+;;============================================================
+;;
+;; Problem 22
+;;
+;;============================================================
+;; Takes no arguments.
+;; In AWK, the global variable is set to zero initially
+;; In ICON, the local variable is set to zero initially
+;; In Impcore, the below code should return unbound variable error.
+
+(check-expect (firstFunction) 0)
+(check-expect (secondFunction) 1)
+
+(define firstFunction ()
+   (set x 10))
+
+(define secondFunction ()
+   (begin (firstFunction) x ))
+
+

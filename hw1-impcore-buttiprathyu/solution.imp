@@ -1,0 +1,353 @@
+;; Name: Prathyusha Butti
+;; Date due: 24th January, 2020
+;; CSc 520 Homework 1: Impcore
+;; File: solution.imp
+;; Purpose: Contains Impcore code solutions for Exercises 4,5,7,8,10,DD
+
+;;============================================================
+;;
+;; Problem 4
+;;
+;;============================================================
+;; (sigma m n) Takes as arguments two integers m, n and returns
+;; the sum of all numbers from m to n if m < n else returns 0 if m > n
+
+;; Example : if m = 1 and n = 4 then sum from 1 to 4 should be 1+2+3+4 = 10
+(check-expect (sigma 10 7) 0) ; test case for case 1
+(check-expect (sigma 10 10) 10) ; test case for case 2
+(check-expect (sigma 1 10) 55) ; test case for case 3
+(check-expect (sigma -4 0) -10) ; test case for case 3
+
+;; Function Definition:
+(define sigma (m n)
+   (if (> m n)
+       0
+       ( + m (sigma (+ m 1) n))))
+
+;; Analysis of the induction:
+;;   - Case 1: if m > n then it returns the sum as 0 (invalid/base case)
+;;   - Case 2: if m = n then it returns the sum as m
+;;   - Case 3: if m < n then it returns the sum of all numbers from m to n
+
+
+
+;;============================================================
+;;
+;; Problem 5
+;;
+;;============================================================
+;; (exp b n) Takes as arguments two integers b,n which are non-negative
+;; and returns the value of b^n else returns -1
+
+
+;; Example : if b = 2 and m = 4 then 2^4 should be 2*2*2*2 = 16
+(check-expect (exp -10 0) -1) ; test case for case 1
+(check-expect (exp 5 -10) -1) ; test case for case 1
+(check-expect (exp 10 0) 1) ; test case for case 2
+(check-expect (exp 0 5) 0) ; test case for case 3
+(check-expect (exp 2 4) 16) ; test case for case 3
+
+;; Function Definition:
+(define exp(b n)
+    (if (or (< b 0) (< n 0))
+       -1
+       (if (= n 0)
+           1
+           (* b (exp b (- n 1))))))
+
+;; Analysis of the induction:
+;;   - Case 1 : If b or n are negative numbers then it returns -1
+;;   - Case 2 : If n = 0 then it returns 1 (as b^0 = 1)
+;;   - Case 3 : If b, n are valid then it returns b^n by recursion
+
+;;============================================================
+;; (log b m) Takes as arguments two integers b,m where b>1 and m>0
+;; and returns the smallest integer n such that b^(n+1) > m
+;; else returns 0
+
+;; Example: if b=4, m=18 then n = 2 as 4^(2+1) > 18
+(check-expect (log 2 -1) 0) ; test case for case 1
+(check-expect (log 1 2) 0) ; test case for case 1
+(check-expect (log 5 3) 0) ; test case for case 2.a
+(check-expect (log 5 25) 2) ; test case for case 2.b
+
+;; Function Definition:
+(define log(b m)
+   (if (or (<= b 1) (<= m 0))
+       0
+       (if (> b m)
+          0
+          (+ 1 (log b (/ m b))))))
+
+;; Analysis of the induction:
+;;   - Case 1: If b <= 1 or m <= 0 then it returns n = 0
+;;   - If b > 1 and m > 0 then it falls into two cases
+;;   - Case 2.a : If b > m then n = 0
+;;   - Case 2.b : If b <= m then recurse and return the result n
+        
+
+
+;;============================================================
+;;
+;; Problem 7
+;;
+;;============================================================
+;; (fib m) Takes an integer m as argument which is non-negative
+;; and returns the mth fibonacci number as the result
+
+;; Example: If m = 4 then fib(4) should return 3 as the result
+(check-expect (fib 0) 0) ; test case for case 1
+(check-expect (fib 1) 1) ; test case for case 2
+(check-expect (fib 4) 3) ; test case for case 3
+(check-expect (fib 6) 8) ; test case for case 3
+
+;; Function Definition:
+(define fib(m)
+    (if (= m 0)
+        0
+        (if (= m 1)
+            1
+            (+ (fib(- m 1)) (fib(- m 2))))))
+
+;; Analysis of the induction:
+;;   - Case 1 : If m = 0 then it returns 0
+;;   - Case 2 : If m = 1 then it returns 1
+;;   - Case 3 : If m > 1 then recurse on  m-1 and  m-2
+;; ,and return the mth Fibonacci number
+
+
+
+;;============================================================
+;;
+;; Problem 8
+;;
+;;============================================================
+;; (primeHelper n i) Takes as arguments two integers n,i which are non-negative
+;; and returns 1 if n is prime or 0 if i is a factor of n
+
+;; Example: If n=7 and i=3 then it returns 1 as 3 and 7 has no common factors
+(check-expect (primeHelper 7 3) 1) ; test case for case 3
+(check-expect (primeHelper 4 2) 0) ; test case for case 3
+
+;; Function Definition
+(define primeHelper(n i)
+   (if (<= n 1)
+       0
+       (if (or (= n 2) (= i 1))
+           1
+           (if(= 0 (mod n i))
+              0
+              (primeHelper n (- i 1))))))
+
+;; Analysis of the induction:
+;;   - Case 1 - if n <=1 then return 0
+;;   - Case 2 - if n = 2 and i = 1 then return 1 as 2 is prime
+;;   - Case 3 - if n % i = 0 then i is factor n, else recurse
+
+;;============================================================
+;; (prime? n) Takes as argument a non-negative integer greater than 1 and
+;; returns 1 if it is prime else return 0.
+
+;; Examples: If n=3 then returns 1 as 3 is prime
+(check-expect (prime? 79) 1) ; test case for prime
+(check-expect (prime? 88) 0) ; test case for non-prime
+
+;; Function Definition
+(define prime?(n)
+    (primeHelper n (/ n 2)))
+
+;; Analysis of the induction:
+;;   - Uses primeHelper to return whether the number is prime or not
+;;   - Case 1 - if n <=1 then return 0
+;;   - Case 2 - if n = 2 and i = 1 then return 1 as 2 is prime
+;;   - Case 3 - if n % i = 0 then i is factor n, else recurse
+
+
+;;============================================================
+;; (nthprimeHelper n i) Takes as argument two positive integers n and i
+;; and returns the nth prime number greater than i
+
+;; Example: If n=5 and i=2,then the 5th prime number greater than 2 which is 13
+(check-expect (nthprimeHelper 5 2) 13) ; 5th prime number greater than 2
+
+;; Function Definition
+(define nthprimeHelper(n i)
+    (if (prime? (+ i 1))
+        (if (= n 1)
+            (+ i 1)
+            (nthprimeHelper (- n 1) (+ i 1)))
+        (nthprimeHelper n (+ i 1))))
+
+;; Analysis of the induction:
+;;   - Case 1 - If i+1 is not prime increment i and recurse
+;;   - Case 2 - If i+1 is prime and n is not equal to 1 then recurse
+;;   - Case 3 - If i+1 is prime and n is equal to 1 then increment i
+
+;;============================================================
+;; (nthprime n) Takes as argument a positive integer and returns
+;; the nth prime number
+
+;; Example: If n = 3 then it returns the 3rd prime number which is 5
+(check-expect (nthprime 3) 5) ; returns 3rd prime number
+(check-expect (nthprime 7) 17) ; return the 7th prime number
+
+;; Function Definition
+(define nthprime(n)
+    (nthprimeHelper n 1))
+
+;; Analysis of the induction:
+;;   - We use helper function nthprimeHelper to do this program
+;;   - nthprimeHelper takes n to be the nth prime number and we send i=1 as
+;;   parameters and as result we want to know nth prime greater than 1
+
+
+;;============================================================
+;; (sumprimes n) Takes as argument non-negative integer and returns
+;; the sum of first n primes
+
+;; Examples: If n=5 then sum is 11+7+5+3+2=28
+(check-expect (sumprimes 5) 28) ; sum of first 5 prime numbers is 28
+
+;; Function Definition
+(define sumprimes(n)
+    (if (<= n 0)
+        0
+        (+ (nthprime n) (sumprimes (- n 1)))))
+
+;; Analysis of the induction:
+;;   - Case 1 - checks if n<=0 then returns 0 as sum
+;;   - Case 2 - if n>0 then we use recursion to get the nth prime,then sum up
+
+;;============================================================
+;; (gcd m n) from text book Page 21. Takes as arguments two positive
+;; integers and returns the gcd of the numbers
+
+;; Example: gcd of 24 and 6 is 6
+(check-expect (gcd 7 1) 1) ; gcd of 7,1 is 1
+(check-expect (gcd 24 6) 6) ; gcd of 24 and 6 is 6
+
+;; Function Definition
+(define gcd(m n)
+    (if (= n 0)
+        m
+        (gcd n (mod m n))))
+
+;; Analysis of the induction:
+;;   - Case 1 - if n is 0 then gcd(m,n) is m
+;;   - Case 2 - if n!=0 then recurse and find gcd(n m%n)
+
+;;============================================================
+;; (relprime? m n) Takes as arguments two positive integers m,n and returns
+;; 1 if it is relatively prime i.e if the gcd is 1 else returns 0 if gcd is not 1
+
+;; Example: If gcd(19,20) = 1 that means 19 and 20 are relatively prime
+(check-expect (relprime? 19 20) 1) ; gcd(19,20) =1 so relatively prime
+(check-expect (relprime? 6 8) 0) ; gcd(6,8)!=1 so not relatively prime
+(check-expect (relprime? 18 4) 0) ; gcd(18,4)!=1 so not relatively prime
+
+;; Function Definition
+(define relprime?(m n)
+    (if (or (<= n 0) (<= m 0))
+       0
+       (if (= (gcd m n) 1)
+           1
+           0 )))
+
+;; Analysis of the induction:
+;;   - Case 1 - Checks if m and n are positive integers
+;;   - Case 2 - If gcd of m,n is 1 then it returns 1 else returns 0
+;;   gcd part of the solution is the recursive part for this problem
+
+
+
+;;============================================================
+;;
+;; Problem 10
+;;
+;;============================================================
+;; (binary m) Takes as argument an integer in the range -1023 to +1023 and
+;; returns the equivalent binary
+
+;; Examples: if m=2 then binary is 10
+(check-expect (binary 12) 1100) ; binary of 12 is 1100
+(check-expect (binary -5) -101) ; binary of -5 is -101
+(check-expect (binary 168) 10101000) ; binary of 168 is 10101000
+
+;; Definition:
+(define binary (m)
+   (if (= m 0)
+       0
+       (+ (mod m 2) (* 10 (binary(/ m 2))))))
+
+;; Analysis of the induction:
+;;   - Case 1 - If m=0 then binary of 0 is 0
+;;   - Case 2 - Else recurse and calculate (m%2 + 10*binary(m/2))
+
+
+
+;;============================================================
+;;
+;; Problem DD
+;;
+;;============================================================
+;; (count-digits n) Takes as argument an non-negative integer and returns
+;; the count of the digits in a number.
+
+;; Examples: If n=123 then count of the digits is 3
+(check-expect (count-digits 123) 3) ; n=123 then digits are 1,2,3 so count is 3
+
+;; Definition:
+(define count-digits (n)
+    (if (= n 0)
+        0
+        (+ 1 (count-digits (/ n 10)))))
+
+;; Analysis of the induction:
+;;   - Case 1 : n=0 then count of digits is 0
+;;   - Case 2 : if n>0 then count of digits is calculated by recursion
+
+;;============================================================
+;; (doubledigitHelper n m) Takes as arguments two positive integers n,m
+;; where n is the input and m is the count of the digits in the input
+;; and returns a positive integer whose decimal representation is the same as
+;; the decimal representation of the input except that each digit appears twice
+
+
+;; Example: If n=123 then result is 110000
+(check-expect (doubledigitHelper 223 3) 222233) ; standard case
+
+;; Definition:
+(define doubledigitHelper (n m)
+
+   (if(< n 10)
+      (+ (* n  (exp 10 m)) (* n m))
+      (+ ( + (* (/ n (exp 10 (- m 1))) (exp 10 (- (* 2 m) 1)))
+      (* (/ n (exp 10 (- m 1))) (exp 10 (- (* 2 m) 2))))
+      (doubledigitHelper (mod n (exp 10 (- m 1))) (- m 1)))))
+
+; Analysis of the induction:
+;;   - Case 1 : n<10 then result should be
+;;   - Case 2 : if n>10 then the logic is if we give 123 then
+;;   implies 1*(10^5)+1*(10^4)+2*(10^3)+2*(10^2)+3*(10^1)+3*(10^0)
+
+;;============================================================
+;; (double-digit n) Takes as argument a positive integer less than 20000
+;; and returns a positive integer whose decimal representation is the same as
+;; the decimal representation of the input except that each digit appears twice.
+
+;; Example: 123 is represented as 112233
+(check-expect (double-digit 123) 112233) ; If n=123 then result = 112233
+(check-expect (double-digit 12) 1122) ; If n=12 then result = 1122
+(check-expect (double-digit 3) 33) ; If n=3 then result = 33
+(check-expect (double-digit 19999) 1199999999) ; large case validation
+(check-expect (double-digit 20000) 0) ; edge case validation
+
+;; Definition:
+(define double-digit (n)
+   (if (>= n 20000)
+       0
+       (doubledigitHelper n (count-digits n))))
+
+;; Analysis of the induction:
+;;   - Case 1 - If n >= 20000 then return 0
+;;   - Case 2 - If n < 20000 then use doubledigitHelper
